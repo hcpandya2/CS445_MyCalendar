@@ -10,18 +10,29 @@ public class Appointment {
 	Duration time;
 	Date start_date;
 	Date end_date;
+	String title;
 	String description;
 	boolean reoccure;
 	
-	public Appointment(Duration time, Date startdate, Date enddate, boolean reoccur){
+	public Appointment(String title, Duration time, Date startdate, Date enddate, boolean reoccur){
 		Scanner scan = new Scanner(System.in);
+		this.title = title;
 		this.time = time;
 		this.start_date = startdate;
 		this.end_date = enddate;
 		this.reoccure = reoccur;
 		
+		
 		System.out.print("Please enter a description for the appointment:");
 		this.description = scan.nextLine();
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
 	}
 
 	public Duration getTime() {
