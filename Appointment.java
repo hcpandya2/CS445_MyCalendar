@@ -1,30 +1,29 @@
-import java.time.Duration;
-import java.util.Date;
-import java.util.Scanner;
+import java.util.Calendar;
 
+public class Appointment implements Comparable<Appointment> {
 
-
-
-public class Appointment {
-
-	Duration time;
-	Date start_date;
-	Date end_date;
-	String title;
+	String title;               // appointment name
 	String description;
-	boolean reoccure;
+	ReoccuranceRule r;
 	
-	public Appointment(String title, Duration time, Date startdate, Date enddate, boolean reoccur){
-		Scanner scan = new Scanner(System.in);
+	public Appointment(String title, String description, Calendar startdate, int duration, String reoccuranceType){
 		this.title = title;
-		this.time = time;
-		this.start_date = startdate;
-		this.end_date = enddate;
-		this.reoccure = reoccur;
+		this.description = description;
 		
+		if(reoccuranceType.equals("Once"))
+			r = new Once_occurance(startdate);
+		else if(reoccuranceType.equals("Daily"))
+			r = new Daily_occurance(startdate);
+		else if(reoccuranceType.equals("Weekly"))
+			r = new Weekly_occurance(startdate);
+		else if(reoccuranceType.equals("Monthly"))
+			r = new Monthly_occurance(startdate);
+		else if(reoccuranceType.equals("Yearly"))
+			r = new Yearly_occurance(startdate);
+		else
+			System.out.println("Error - BRRRRrrrr!");
 		
-		System.out.print("Please enter a description for the appointment:");
-		this.description = scan.nextLine();
+		r.setDuration(duration);
 	}
 
 	public String getTitle() {
@@ -35,30 +34,6 @@ public class Appointment {
 		this.title = title;
 	}
 
-	public Duration getTime() {
-		return time;
-	}
-
-	public void setTime(Duration time) {
-		this.time = time;
-	}
-
-	public Date getStart_date() {
-		return start_date;
-	}
-
-	public void setStart_date(Date start_date) {
-		this.start_date = start_date;
-	}
-
-	public Date getEnd_date() {
-		return end_date;
-	}
-
-	public void setEnd_date(Date end_date) {
-		this.end_date = end_date;
-	}
-
 	public String getDescription() {
 		return description;
 	}
@@ -66,18 +41,63 @@ public class Appointment {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-
-	public boolean isReoccure() {
-		return reoccure;
+	
+	//StartDate also contain's the appointments start time of appointment
+	public Calendar getStart_date() {
+		return r.getFirstAppointment();
 	}
 
-	public void setReoccure(boolean reoccure) {
-		this.reoccure = reoccure;
+	//StartDate also contain's the appointments start time of appointment
+	public void setStart_date(Calendar start_date) {
+		r.setFirstAppointment(start_date);
 	}
 
+	public Calendar getEnd_date() {
+		return r.getLastAppintment();
+	}
+
+	public void setEnd_date(Calendar end_date) {
+		r.setlastAppointment(end_date);
+	}
 	
+	public int getDuration(){
+		return r.getDuration();
+	}
 	
+	public void setDuration(int duration){
+		r.setDuration(duration);
+	}
 	
+	public boolean IsOndate(Calendar testDate){
+		return r.CheckDate(testDate.get(Calendar.MONTH), testDate.get(Calendar.DATE), testDate.get(Calendar.YEAR));
+	}
+
+	public void UpdateReoccurancetype(String reoccuranceType){
+		
+		ReoccuranceRule r_new;
+		if(reoccuranceType.equals("Once"))
+			r_new = new Once_occurance(getStart_date());
+		else if(reoccuranceType.equals("Daily"))
+			r_new  = new Daily_occurance(getStart_date());
+		else if(reoccuranceType.equals("Weekly"))
+			r_new  = new Weekly_occurance(getStart_date());
+		else if(reoccuranceType.equals("Monthly"))
+			r_new  = new Monthly_occurance(getStart_date());
+		else if(reoccuranceType.equals("Yearly"))
+			r_new  = new Yearly_occurance(getStart_date());
+		else{
+			System.out.println("Error - Invalid Reoccurance Type. No changes made.");
+			return;
+		}
+		
+		r_new.setDuration(getDuration());
+		r_new.setlastAppointment(getEnd_date());
+		
+		r = r_new;
+	}
 	
-	
+	@Override
+	public int compareTo(Appointment ap) {
+		return getStart_date().compareTo(ap.getStart_date());
+	}
 }
