@@ -111,25 +111,6 @@ public class File_Reader {
 		
 		return list_of_components;
 
-				
-	/*	// creating a new calendar 
-		Calendar calendar = new Calendar();
-		calendar.getProperties().add(new ProdId("-//Ben Fortuna//iCal4j 1.0//EN"));
-		calendar.getProperties().add(Version.VERSION_2_0);
-		calendar.getProperties().add(CalScale.GREGORIAN);
-
-		// Add events, etc..
-		
-		java.util.Calendar call = java.util.Calendar.getInstance();
-		call.set(java.util.Calendar.MONTH, java.util.Calendar.DECEMBER);
-		call.set(java.util.Calendar.DAY_OF_MONTH, 25);
-
-		//VEvent christmas = new VEvent(new Date(call.getTime()), "Christmas Day");
-		// initialize as an all-day event..
-		//
-		//christmas.getProperties().getProperty(Property.DTSTART).getParameters().add(Value.DATE);
-		
-		// end of adding event 
-		*/
+	
 	}
 }
