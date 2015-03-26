@@ -1,4 +1,5 @@
 import java.util.Calendar;
+import java.util.Date;
 
 public class Appointment implements Comparable<Appointment> {
 
@@ -99,5 +100,14 @@ public class Appointment implements Comparable<Appointment> {
 	@Override
 	public int compareTo(Appointment ap) {
 		return getStart_date().compareTo(ap.getStart_date());
+	}
+	
+	@Override
+	public String toString() {
+		return "Appointment [title=" + title + ", description=" + description
+				+ ", r=" + r + ", getTitle()=" + getTitle()
+				+ ", getDescription()=" + getDescription()
+				+ ", getStart_date()=" + getStart_date() + ", getEnd_date()="
+				+ getEnd_date() + ", getDuration()=" + getDuration() + "]";
 	}
 }
