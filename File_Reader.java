@@ -1,10 +1,13 @@
+import java.io.BufferedWriter;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
 //import java.util.Calendar;
 
 
 
+import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -44,7 +47,7 @@ public class File_Reader {
 			    if(component.getName().equalsIgnoreCase("VEVENT")){
 				    list_of_components.put(new Integer(list_of_components.size() + 1),component);
 				   			    
-				    SimpleDateFormat SDF = new SimpleDateFormat("yyyyMMdd'T'HHmmss");
+				    SimpleDateFormat SDF = new SimpleDateFormat("yyyyMMdd'T'HHmmss'Z'");
 					
 				    Date start = SDF.parse(component.getProperty("DTSTART").getValue());
 			        Date end = SDF.parse(component.getProperty("DTEND").getValue());
@@ -113,4 +116,27 @@ public class File_Reader {
 
 	
 	}
+	
+	public static void Write_to_File (String filename, boolean value) throws IOException{
+
+		BufferedWriter outStream= new BufferedWriter(new FileWriter(filename, value));
+		
+		for(Appointment a : Schedule.appointments){
+			
+			outStream.write("BEGIN:EVENT");
+			outStream.write("NAME:"+ a.title);
+			outStream.write("DTSTART:" + a.getStart_date().get(java.util.Calendar.MONTH) + a.getStart_date().get(java.util.Calendar.DATE) + a.getStart_date().get(java.util.Calendar.YEAR) + 
+								   "T" + a.getStart_date().get(java.util.Calendar.HOUR)  + a.getStart_date().get(java.util.Calendar.MINUTE)+ a.getStart_date().get(java.util.Calendar.SECOND) +'Z');
+			outStream.write("DTEND:" +  a.getEnd_date().get(java.util.Calendar.MONTH) + a.getEnd_date().get(java.util.Calendar.DATE) + a.getEnd_date().get(java.util.Calendar.YEAR) + 
+					   			  "T" + a.getEnd_date().get(java.util.Calendar.HOUR)  + a.getEnd_date().get(java.util.Calendar.MINUTE)+ a.getEnd_date().get(java.util.Calendar.SECOND) +'Z');
+			outStream.write("DESCRIPTION:" + a.getDescription());
+			outStream.write("END EVENT");
+			//outStream.write();
+		}
+		
+	}
+	
+	
+	
+	
 }

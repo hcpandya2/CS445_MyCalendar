@@ -11,19 +11,20 @@ public class Appointment implements Comparable<Appointment> {
 		this.title = title;
 		this.description = description;
 		
-		if(reoccuranceType.equals("Once"))
+		if(reoccuranceType.equalsIgnoreCase("Once"))
 			r = new Once_occurance(startdate);
-		else if(reoccuranceType.equals("Daily"))
+		else if(reoccuranceType.equalsIgnoreCase("Daily"))
 			r = new Daily_occurance(startdate);
-		else if(reoccuranceType.equals("Weekly"))
+		else if(reoccuranceType.equalsIgnoreCase("Weekly"))
 			r = new Weekly_occurance(startdate);
-		else if(reoccuranceType.equals("Monthly"))
+		else if(reoccuranceType.equalsIgnoreCase("Monthly"))
 			r = new Monthly_occurance(startdate);
-		else if(reoccuranceType.equals("Yearly"))
+		else if(reoccuranceType.equalsIgnoreCase("Yearly"))
 			r = new Yearly_occurance(startdate);
 		else
 			System.out.println("Error - BRRRRrrrr!");
 		
+		r.setFirstAppointment(startdate);
 		r.setDuration(duration);
 	}
 
@@ -104,10 +105,13 @@ public class Appointment implements Comparable<Appointment> {
 	
 	@Override
 	public String toString() {
-		return "Appointment [title=" + title + ", description=" + description
-				+ ", r=" + r + ", getTitle()=" + getTitle()
-				+ ", getDescription()=" + getDescription()
-				+ ", getStart_date()=" + getStart_date() + ", getEnd_date()="
-				+ getEnd_date() + ", getDuration()=" + getDuration() + "]";
+		return "[ description=" + description
+				+ ", r=" + r + ", Title=" + getTitle()
+				+ ", Description=" + getDescription()
+				+ ", Start_date=" + /*getStart_date() +*/ getStart_date().get(Calendar.MONTH) +"/" +
+				getStart_date().get(Calendar.DATE) + "/"+ getStart_date().get(Calendar.YEAR)+ " " +
+				getStart_date().get(Calendar.HOUR) + ":" + getStart_date().get(Calendar.MINUTE) + ":" +
+				getStart_date().get(Calendar.SECOND) +/*getEnd_date()  + */ 
+				", Duration=" + getDuration() + "]";
 	}
 }
