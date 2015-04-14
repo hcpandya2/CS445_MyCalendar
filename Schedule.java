@@ -40,7 +40,7 @@ public class Schedule {
 		
 	}
 	
-	public ArrayList<Appointment> getDatesAppointments(Calendar date){
+	public static ArrayList<Appointment> getDatesAppointments(Calendar date){
 		ArrayList<Appointment> datesAppointments = new ArrayList<Appointment>();
 		
 		for(Appointment ap : appointments){

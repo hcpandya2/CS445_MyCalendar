@@ -17,7 +17,7 @@ public class Once_occurance extends ReoccuranceRule{
 
 	@Override
 	public String getName() {
-		return "Once";
+		return "once";
 	}
 
 
