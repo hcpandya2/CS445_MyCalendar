@@ -1,42 +1,53 @@
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 //import java.util.Calendar;
 
 
 
+import java.io.PrintWriter;
+import java.net.SocketException;
 import java.nio.file.Files;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import net.fortuna.ical4j.data.CalendarBuilder;
-import net.fortuna.ical4j.data.ParserException;
-import net.fortuna.ical4j.model.Calendar;
-import net.fortuna.ical4j.model.Component;
-import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.model.PropertyList;
+import net.fortuna.ical4j.data.*;
+import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.component.VEvent;
-import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.model.property.CalScale;
+import net.fortuna.ical4j.model.property.Description;
 import net.fortuna.ical4j.model.property.ProdId;
+import net.fortuna.ical4j.model.property.RRule;
+import net.fortuna.ical4j.model.property.Uid;
 import net.fortuna.ical4j.model.property.Version;
+import net.fortuna.ical4j.util.UidGenerator;
 
 
 
 public class File_Reader {
+	
+	public static String reoccurance_rule ="";
 
-	public static HashMap<Integer,Component> Read_File(String filename) throws IOException, ParserException{
+	public static ArrayList<Appointment> Read_File(String filename) throws IOException, ParserException{
 		FileInputStream fin = null;
-		HashMap<Integer,Component> list_of_components = new HashMap<Integer,Component>();
+		ArrayList<Appointment> list_of_appointments = new ArrayList<Appointment>();
 		HashMap <Component,ArrayList<Property>> list_of_property = new HashMap<Component,ArrayList<Property>>();
 		
 		try {
 			fin = new FileInputStream(filename);
+			
+			System.out.println("Total file size to read (in bytes) : "
+					+ fin.available());
+			
 			CalendarBuilder builder = new CalendarBuilder();
 			net.fortuna.ical4j.model.Calendar cal = builder.build(fin);
 			
@@ -45,7 +56,7 @@ public class File_Reader {
 			    Component component = (Component) i.next();
 			    
 			    if(component.getName().equalsIgnoreCase("VEVENT")){
-				    list_of_components.put(new Integer(list_of_components.size() + 1),component);
+				    //list_of_components.put(new Integer(list_of_components.size() + 1),component);
 				   			    
 				    SimpleDateFormat SDF = new SimpleDateFormat("yyyyMMdd'T'HHmmss'Z'");
 					
@@ -98,6 +109,7 @@ public class File_Reader {
 				    Appointment appointment = new Appointment(title,description,startdate,duration,recurrence);
 				    appointment.setEnd_date(enddate);
 				    appointment.setDescription(description);
+				    list_of_appointments.add(appointment);
 				   // System.out.println(appointment);
 			    }
 			    
@@ -112,30 +124,138 @@ public class File_Reader {
 			e.printStackTrace();
 		}
 		
-		return list_of_components;
+		return list_of_appointments;
 
 	
 	}
-	
-	public static void Write_to_File (String filename, boolean value) throws IOException{
+	public static void Write_to_File (String filename) throws IOException, ValidationException, ParseException{
 
-		BufferedWriter outStream= new BufferedWriter(new FileWriter(filename, value));
+		
+		FileOutputStream fout = new FileOutputStream(filename);
+		
+		GregorianCalendar start = new GregorianCalendar();
+		start.set(2013, 2,5,9, 0);
+		
+		GregorianCalendar end=new GregorianCalendar();
+		end.set(2013, 2,5,17,0);
+		
+		DateTime startTime=new DateTime(start.getTime());
+		DateTime endTime=new DateTime(end.getTime());
+		
+		//Create event
+		VEvent eightHourEvent = new VEvent(startTime,endTime,"Test Event");
+		
+		net.fortuna.ical4j.model.Calendar cal = new net.fortuna.ical4j.model.Calendar();
+		//add product Id
+		cal.getProperties().add(new ProdId("-//Mozilla.org/NONSGML Mozilla Calendar V1.1//EN"));
+		cal.getProperties().add(Version.VERSION_2_0);
+		cal.getProperties().add(CalScale.GREGORIAN);
+		
+		//generate unique identifier
+		UidGenerator ug = new UidGenerator("uidGen");
+		Uid uid = ug.generateUid();
+		
+		eightHourEvent.getProperties().add(uid);
+
+		//add event in ical4j calendar
+		cal.getComponents().add(eightHourEvent);
+		//System.out.println(cal.toString());
+		
+		
+		//save event in test.ics file
+				String eventName = "Testing appointment";
+				 java.util.GregorianCalendar startDate = new GregorianCalendar();
+				 startDate.set(2014, 2,5,9, 0);
+				 
+				 java.util.Calendar endDate = new GregorianCalendar();
+				 endDate.set(2014,2,5,12,0);
+				
+				DateTime start_date = new DateTime(startDate.getTime());
+				DateTime end_date = new DateTime(endDate.getTime());
+				
+				String rrule = "FREQ=WEEKLY;INTERVAL=1;COUNT=10";
+				
+				
+				//VEvent meeting = new VEvent(start_date, end_date, eventName);
+				// deleted end_date for purpose of checking
+				
+				VEvent meeting = new VEvent(start_date,eventName);
+				ug = new UidGenerator("uidGen");
+				Uid u_id = ug.generateUid();
+				
+				meeting.getProperties().add(u_id);
+				meeting.getProperties().add(new RRule(rrule));
+				cal.getComponents().add(meeting);
+				
+				
+				//System.out.println(cal.toString());
+				//System.out.println(meeting);
+			
+				 CalendarOutputter out=new CalendarOutputter();
+				 out.output(cal, fout);	 	
+			
+		
+	}
+	
+	@SuppressWarnings("unused")
+	public static void write_appointments(String filename) throws ParseException, IOException, ValidationException{
+		
+		FileOutputStream fout = new FileOutputStream(filename);
+		net.fortuna.ical4j.model.Calendar cal = new net.fortuna.ical4j.model.Calendar();
+		//add product Id
+		cal.getProperties().add(new ProdId("-//Mozilla.org/NONSGML Mozilla Calendar V1.1//EN"));
+		cal.getProperties().add(Version.VERSION_2_0);
+		cal.getProperties().add(CalScale.GREGORIAN);
+		
+		UidGenerator ug = new UidGenerator("uidGen");
 		
 		for(Appointment a : Schedule.appointments){
 			
-			outStream.write("BEGIN:EVENT");
-			outStream.write("NAME:"+ a.title);
-			outStream.write("DTSTART:" + a.getStart_date().get(java.util.Calendar.MONTH) + a.getStart_date().get(java.util.Calendar.DATE) + a.getStart_date().get(java.util.Calendar.YEAR) + 
-								   "T" + a.getStart_date().get(java.util.Calendar.HOUR)  + a.getStart_date().get(java.util.Calendar.MINUTE)+ a.getStart_date().get(java.util.Calendar.SECOND) +'Z');
-			outStream.write("DTEND:" +  a.getEnd_date().get(java.util.Calendar.MONTH) + a.getEnd_date().get(java.util.Calendar.DATE) + a.getEnd_date().get(java.util.Calendar.YEAR) + 
-					   			  "T" + a.getEnd_date().get(java.util.Calendar.HOUR)  + a.getEnd_date().get(java.util.Calendar.MINUTE)+ a.getEnd_date().get(java.util.Calendar.SECOND) +'Z');
-			outStream.write("DESCRIPTION:" + a.getDescription());
-			outStream.write("END EVENT");
-			//outStream.write();
+			java.util.GregorianCalendar startDate = (GregorianCalendar) a.getStart_date();
+			java.util.GregorianCalendar endDate = null;
+			
+			if(a.getEnd_date() != null){
+				endDate = (GregorianCalendar) a.getEnd_date();
+			}
+			String eventname = a.getTitle();
+			String summary = a.getTitle();
+			String frequency = a.r.Get_eventfreq();
+			String description = a.getDescription();
+			
+			DateTime start_date = new DateTime(startDate.getTime());
+			DateTime end_date = null;
+			
+			if(endDate != null){
+				end_date = new DateTime(endDate.getTime());
+			}
+			
+			Uid u_id = ug.generateUid();
+			String rrule ="";
+			VEvent event;
+			
+			
+			if(end_date != null){
+				event = new VEvent(start_date,end_date,eventname);
+			}
+			else {
+				 event = new VEvent(start_date,eventname);
+			}
+			
+			
+			event.getProperties().add(u_id);
+			event.getProperties().add(new Description(description));
+			
+			if(!frequency.equalsIgnoreCase("")){
+				rrule = "FREQ="+frequency;
+				event.getProperties().add(new RRule(rrule));
+				System.out.println(rrule);
+			}
+			cal.getComponents().add(event);
 		}
 		
+		CalendarOutputter out=new CalendarOutputter();
+		out.output(cal, fout);
 	}
-	
 	
 	
 	

@@ -9,6 +9,9 @@ public class Schedule {
 	static ArrayList<Appointment> appointments;   // list of all the existing or upcoming appointments
 	
 	//initializing a calendar with a name and a list of appointment
+	
+	
+	
 	public Schedule(String name){
 		this.name = name;
 		appointments = new ArrayList<Appointment>();

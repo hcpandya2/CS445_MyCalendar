@@ -14,6 +14,7 @@ public abstract class ReoccuranceRule {
 		
 	public abstract boolean CheckDate(int month, int date, int year);
 	public abstract String getName();
+	public abstract String Get_eventfreq();
 	
 	public int getDuration(){
 		return duration;
@@ -39,8 +40,15 @@ public abstract class ReoccuranceRule {
 		this.lastAppointment = lastAppointment;
 	}
 	
-	boolean withinDateRange(Calendar testcal){
-		return (testcal.compareTo(firstAppointment) >= 0) && (lastAppointment == null || testcal.compareTo(lastAppointment) <= 0);
-		
-	}
+	@SuppressWarnings("unused")
+	public boolean withinDateRange(Calendar testcal){
+		Calendar firstAptTimeless = Calendar.getInstance();
+		firstAptTimeless.set(firstAppointment.get(Calendar.YEAR), firstAppointment.get(Calendar.MONTH), firstAppointment.get(Calendar.DATE), 0, 0, 0);
+		Calendar lastAptTimeless = null;
+		if(lastAppointment!= null){
+			lastAptTimeless = Calendar.getInstance();
+			lastAptTimeless.set(lastAppointment.get(Calendar.YEAR), lastAppointment.get(Calendar.MONTH), lastAppointment.get(Calendar.DATE), 23, 59, 59);
+		}
+		return (testcal.compareTo(firstAptTimeless) >= 0) && (lastAptTimeless == null || testcal.compareTo(lastAptTimeless) <= 0);
+	}	
 }																																			

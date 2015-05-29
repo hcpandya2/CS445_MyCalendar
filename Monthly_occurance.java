@@ -8,18 +8,24 @@ public class Monthly_occurance extends ReoccuranceRule {
 		
 	}
 
+	
 	@Override
 	public boolean CheckDate(int month, int date, int year) {
 		Calendar testcal = Calendar.getInstance();
-		testcal.set(month, date, year);
+		testcal.set(year, month - 1, date);
 		return firstAppointment.get(Calendar.DATE) == date && withinDateRange(testcal);
-		
 	}
+	
 
 	@Override
 	public String getName() {
 		
-		return "Montly";
+		return "monthly";
 	}
+	
+	public String Get_eventfreq(){
+		return "MONTHLY";
+	}
+
 
 }

@@ -6,26 +6,25 @@ import java.util.Calendar;
 
 import org.junit.Test;
 
-
 public class Once_occurance_test {
 
 	@Test
 	public void once_occurance_test() throws ParseException {
 		
 		Calendar startdate = Calendar.getInstance();
-		SimpleDateFormat SDF = new SimpleDateFormat("MM/DD/YYYY HH:mm:ss");
+		SimpleDateFormat SDF = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
 		startdate.setTime(SDF.parse("02/02/2012 02:02:02"));
 		Once_occurance onc_r = new Once_occurance(startdate);
 		
 		assertEquals(onc_r.getFirstAppointment(),startdate);
 		assertEquals(onc_r.getName(),"once");
-		
 	}
 	
-public void duration_test() throws ParseException{
+	@Test
+	public void duration_test() throws ParseException{
 		
 		Calendar startdate = Calendar.getInstance();
-		SimpleDateFormat SDF = new SimpleDateFormat("MM/DD/YYYY HH:mm:ss");
+		SimpleDateFormat SDF = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
 		startdate.setTime(SDF.parse("02/02/2012 02:02:02"));
 		Appointment ap = new Appointment("title1", "description1",startdate, 5,"once");
 		
@@ -36,9 +35,10 @@ public void duration_test() throws ParseException{
 		
 	}
 	
+	@Test
 	public void lastdate_test() throws ParseException{
 		Calendar startdate = Calendar.getInstance();
-		SimpleDateFormat SDF = new SimpleDateFormat("MM/DD/YYYY HH:mm:ss");
+		SimpleDateFormat SDF = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
 		startdate.setTime(SDF.parse("02/02/2012 02:02:02"));
 		Appointment ap = new Appointment("title1", "description1",startdate, 5,"once");
 		
@@ -54,22 +54,21 @@ public void duration_test() throws ParseException{
 		assertEquals(once_r.getDuration(), 80);
 	}
 	
-	public void checkdate_test() throws ParseException{
+	@Test
+	public void TestCheckDate() throws ParseException{
 		Calendar startdate = Calendar.getInstance();
-		SimpleDateFormat SDF = new SimpleDateFormat("MM/DD/YYYY HH:mm:ss");
-		startdate.setTime(SDF.parse("02/02/2012 02:02:02"));
+		SimpleDateFormat SDF = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+		startdate.setTime(SDF.parse("05/09/2012 02:02:02"));
 		Once_occurance onc_r = new Once_occurance(startdate);
-		
-
-		Calendar enddate = Calendar.getInstance();
-		enddate.setTime(SDF.parse("02/03/2013 02:02:02"));
-		
-		boolean result = onc_r.CheckDate(2, 2, 2012);
-		assertTrue(result);
-		
-		onc_r.setFirstAppointment(enddate);
-		result = onc_r.CheckDate(2, 3, 2012);
-		assertTrue(result);
+	
+		assertFalse(onc_r.CheckDate(5, 9, 2013));
+		assertFalse(onc_r.CheckDate(4, 9, 2012));
+		assertFalse(onc_r.CheckDate(5, 8, 2012));
+		assertTrue(onc_r.CheckDate(5, 9, 2012));
 	}
-
+	
+	@Test
+	public void checkGetEventFreq(){
+		assertTrue("".equals(new Once_occurance(Calendar.getInstance()).Get_eventfreq()));
+	}
 }

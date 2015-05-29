@@ -1,4 +1,6 @@
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.Format;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -9,7 +11,8 @@ import java.util.Scanner;
 
 import net.fortuna.ical4j.data.ParserException;
 import net.fortuna.ical4j.model.Component;
-
+import net.fortuna.ical4j.model.ValidationException;
+import net.fortuna.ical4j.data.*;
 
 public class User_commands {
 	
@@ -24,7 +27,7 @@ public class User_commands {
 	 *   
 	 */
 	
-	public static void Add_New_Appointment() throws ParseException{
+	public static void Add_New_Appointment() throws ParseException, IOException, ValidationException{
 		System.out.println("Enter the information for the appointment.");
 		
 		System.out.print("Title: ");
@@ -32,9 +35,9 @@ public class User_commands {
 		System.out.print("Description: ");
 		String Description	  = scan.nextLine();
 		
-		System.out.print("Start Date(MM/DD/YYYY HH:MM:ss): ");
+		System.out.print("Start Date(dd-M-yyyy hh:mm:ss): ");
 		String string_date 	  = scan.nextLine();
-		SimpleDateFormat SDF  = new SimpleDateFormat("MM/DD/YYYY HH:mm:ss");
+		SimpleDateFormat SDF  = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
 		Calendar startdate = Calendar.getInstance();
 		startdate.setTime(SDF.parse(string_date));
        
@@ -44,9 +47,18 @@ public class User_commands {
 		System.out.print("Duration in hours");
 		int Duration		  = scan.nextInt();
 		
+		System.out.println("  ");
+		System.out.println("Adding the appointment to the list_of_appointments...");
 		Schedule.add_new(Title, Description, startdate, Duration, Recurrence);
+		System.out.println("  ");
 		System.out.println("New list of appointments:");
 		System.out.println(Schedule.appointments);
+		
+		
+		System.out.println("Updating the file with new appointment changes.....");
+		File_Reader.Write_to_File("sample.ics");
+		System.out.println("  ");
+		System.out.println("Changes performed successfully");
 		
 	}
 	
@@ -194,15 +206,41 @@ public class User_commands {
 		
 	}
 	
-	public static  HashMap<Integer,Component> Import_Appointment() throws IOException, ParserException{
+	public static  ArrayList<Appointment> Import_Appointment() throws IOException, ParserException{
 		System.out.print("Enter the name of the file:");
 		String filename = scan.nextLine();
 		return File_Reader.Read_File(filename);
 		
 	}
 	
-	public static void Export_Appointment(){
+	public static void print_appointments_from_file() throws IOException, ParserException{
+		System.out.print("enter the name of the file: ");
+		String filename = scan.nextLine();
 		
+		System.out.println("Here are the appointments from " + filename);
+		ArrayList<Appointment> map_of_appointments = new ArrayList<Appointment> ();
+		
+		System.out.println("calling read_file");
+		map_of_appointments = File_Reader.Read_File(filename);
+		
+		System.out.println("printing appointments");
+		System.out.println(map_of_appointments);
+	}
+	public static void Print_Appointments_to_file() throws IOException, ValidationException, ParseException{
+		System.out.println("Enter the file name: ");
+		String filename = scan.nextLine();
+		File_Reader.Write_to_File(filename);
+		System.out.println("done writing ");
+		System.out.println(" ");
+		
+	}
+	
+	public static void read_file() throws ParseException, IOException, ValidationException{
+		System.out.println("Enter the file name:");
+		String filename = scan.next();
+		File_Reader.write_appointments(filename);
+		System.out.println("done writing");
+		System.out.println(" ");
 	}
 	
 	

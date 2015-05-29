@@ -74,6 +74,9 @@ public class Appointment implements Comparable<Appointment> {
 		return r.CheckDate(testDate.get(Calendar.MONTH), testDate.get(Calendar.DATE), testDate.get(Calendar.YEAR));
 	}
 
+	public void setReoccuranceRule(ReoccuranceRule  Re){
+		r = Re;
+	}
 	public void UpdateReoccurancetype(String reoccuranceType){
 		
 		ReoccuranceRule r_new;

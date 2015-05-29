@@ -11,8 +11,8 @@ public class Yearly_occurance extends ReoccuranceRule {
 	@Override
 	public boolean CheckDate(int month, int date, int year) {
 		Calendar testcal = Calendar.getInstance();
-		testcal.set(month, date, year);
-		return (firstAppointment.get(Calendar.DATE)) == date && (firstAppointment.get(Calendar.MONTH) == month) && withinDateRange(testcal);
+		testcal.set(year, month - 1, date);
+		return (firstAppointment.get(Calendar.DATE)) == date && (firstAppointment.get(Calendar.MONTH) == month - 1) && withinDateRange(testcal);
 	}
 
 	@Override
@@ -21,4 +21,7 @@ public class Yearly_occurance extends ReoccuranceRule {
 		return "Yearly";
 	}
 
+	public String Get_eventfreq(){
+		return "YEARLY";
+	}
 }

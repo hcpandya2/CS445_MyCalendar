@@ -6,13 +6,9 @@ public class Once_occurance extends ReoccuranceRule{
 		super(firstAppointment);
 	}
 	
-
 	@Override
 	public boolean CheckDate(int month, int date, int year) {
-		
-		return firstAppointment.get(Calendar.DATE) == date &&
-			   firstAppointment.get(Calendar.MONTH) == month &&
-			   firstAppointment.get(Calendar.YEAR) == year;
+		return (firstAppointment.get(Calendar.DATE)) == date && (firstAppointment.get(Calendar.MONTH) == month - 1) && (firstAppointment.get(Calendar.YEAR) == year);
 	}
 
 	@Override
@@ -20,5 +16,7 @@ public class Once_occurance extends ReoccuranceRule{
 		return "once";
 	}
 
-
+	public String Get_eventfreq(){
+		return "";
+	}
 }
