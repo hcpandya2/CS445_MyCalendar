@@ -47,8 +47,9 @@ public class Schedule_Test {
 		assertTrue(aps.contains(ap2));
 		assertEquals(2, aps.size());
 		
-		Schedule.add_new("title4", "description4", Calendar.getInstance(), 50, "once");
+		Schedule.add_new("title4", "summary4", "description4", Calendar.getInstance(), Calendar.getInstance(), 50, "once");
 		assertEquals(3,aps.size());
+		
 	}
 	
 	public void end_date_test() throws ParseException{

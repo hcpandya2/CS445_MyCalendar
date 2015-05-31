@@ -30,9 +30,11 @@ public class Schedule {
 	}
 	
 	// adding a new appointment to the list
-	public static void add_new (String title, String description, Calendar startdate, int duration, String reoccuranceType){
+	public static void add_new (String title,String summary, String description, Calendar startdate, Calendar lastdate, int duration, String reoccuranceType){
 		
 		Appointment appointment = new Appointment(title,description,startdate,duration,reoccuranceType);
+		appointment.setSummary(summary);
+		appointment.r.setlastAppointment(lastdate);
 		if(appointments == null){
 			appointments = new ArrayList<Appointment>();
 		}

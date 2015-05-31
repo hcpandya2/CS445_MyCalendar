@@ -32,9 +32,10 @@ public class User_commands {
 		
 		System.out.print("Title: ");
 		String Title		  = scan.nextLine();
+		System.out.print("Summary: ");
+		String summary        = scan.nextLine();
 		System.out.print("Description: ");
 		String Description	  = scan.nextLine();
-		
 		System.out.print("Start Date(dd-M-yyyy hh:mm:ss): ");
 		String string_date 	  = scan.nextLine();
 		SimpleDateFormat SDF  = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
@@ -43,13 +44,21 @@ public class User_commands {
        
 		System.out.print("Recurence Rule (Once/Daily/Weekly/Monthly/Yearly): ");
 		String Recurrence 	  = scan.nextLine();
+		Calendar lastdate = null;
+		if(!Recurrence.equalsIgnoreCase("once")){
+			System.out.println("Enter the date of last occurance of this event(dd-M-yyyydd-M-yyyy hh:mm:ss) or enter forever: ");
+			String lastoccurance = scan.nextLine();
+			if (!lastoccurance.equalsIgnoreCase("forever")){
+				lastdate = Calendar.getInstance();
+				lastdate.setTime(SDF.parse(lastoccurance));
+			}
+		}
 		
-		System.out.print("Duration in hours");
+		System.out.print("Duration in minutes: ");
 		int Duration		  = scan.nextInt(); 
-		
 		System.out.println("  ");
 		System.out.println("Adding the appointment to the list_of_appointments...");
-		Schedule.add_new(Title, Description, startdate, Duration, Recurrence);
+		Schedule.add_new(Title,summary, Description, startdate, lastdate, Duration, Recurrence);
 		System.out.println("  ");
 		System.out.println("New list of appointments:");
 		System.out.println(Schedule.appointments);
