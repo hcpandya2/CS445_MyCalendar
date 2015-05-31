@@ -79,7 +79,7 @@ public class User_commands {
 			if(!title.equalsIgnoreCase("quit")){
 				ArrayList<Appointment> result = Schedule.find_app(title);
 				
-				if(result == null){
+				if(result.size() == 0){
 					System.out.println("No such appointment exists.");
 					System.out.println("Enter the title of the appointment to continue the search"
 							+ " or enter quit to exit from the delete option");

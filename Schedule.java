@@ -118,7 +118,7 @@ copy.setTime(original.getTime());
 	public static ArrayList<Appointment> find_app(String search_word){
 		ArrayList<Appointment> result = new ArrayList<Appointment>();
 		for(Appointment a : appointments){
-			if(a.title.equalsIgnoreCase(search_word)){
+			if(a.title != null && a.title.trim().equalsIgnoreCase(search_word.trim())){
 				result.add(a);
 			}
 		}
