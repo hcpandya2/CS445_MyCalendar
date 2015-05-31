@@ -40,7 +40,6 @@ public abstract class ReoccuranceRule {
 		this.lastAppointment = lastAppointment;
 	}
 	
-	@SuppressWarnings("unused")
 	public boolean withinDateRange(Calendar testcal){
 		Calendar firstAptTimeless = Calendar.getInstance();
 		firstAptTimeless.set(firstAppointment.get(Calendar.YEAR), firstAppointment.get(Calendar.MONTH), firstAppointment.get(Calendar.DATE), 0, 0, 0);

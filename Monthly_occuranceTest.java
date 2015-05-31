@@ -18,6 +18,8 @@ public class Monthly_occuranceTest {
 		
 		assertEquals(mon_r.getFirstAppointment(),startdate);
 		assertEquals(mon_r.getName(),"monthly");
+		startdate.setTime(SDF.parse("03/02/2012 02:02:02"));
+		
 	}
 	
 	@Test

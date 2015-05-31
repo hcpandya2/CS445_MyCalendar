@@ -25,8 +25,10 @@ import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.property.CalScale;
 import net.fortuna.ical4j.model.property.Description;
+import net.fortuna.ical4j.model.property.Name;
 import net.fortuna.ical4j.model.property.ProdId;
 import net.fortuna.ical4j.model.property.RRule;
+import net.fortuna.ical4j.model.property.Summary;
 import net.fortuna.ical4j.model.property.Uid;
 import net.fortuna.ical4j.model.property.Version;
 import net.fortuna.ical4j.util.UidGenerator;
@@ -59,44 +61,64 @@ public class File_Reader {
 				    //list_of_components.put(new Integer(list_of_components.size() + 1),component);
 				   			    
 				    SimpleDateFormat SDF = new SimpleDateFormat("yyyyMMdd'T'HHmmss'Z'");
-					
-				    Date start = SDF.parse(component.getProperty("DTSTART").getValue());
-			        Date end = SDF.parse(component.getProperty("DTEND").getValue());
-			        
+				    SimpleDateFormat SDFalt = new SimpleDateFormat("yyyyMMdd'T'HHmmss");
+				    
+				    Date start;
+				    try{
+				    	start = SDF.parse(component.getProperty("DTSTART").getValue());
+				    }
+				    catch(ParseException ex){
+				    	start = SDFalt.parse(component.getProperty("DTSTART").getValue());
+				    }
+				    
+				    Date end;
+				    try{
+				    	end = SDF.parse(component.getProperty("DTEND").getValue());
+				    }
+				    catch(ParseException ex){
+				    	end = SDFalt.parse(component.getProperty("DTEND").getValue());
+				    }
+				
 			        java.util.Calendar startdate = java.util.Calendar.getInstance();
-			        java.util.Calendar enddate = java.util.Calendar.getInstance();
-			        int startday = start.getDay();
-			        int endday = end.getDay();
-			        
-			        startdate.set(start.getYear(),start.getMonth(),start.getDate(),start.getHours(),start.getMinutes(), start.getSeconds());
-			        enddate.set(end.getYear(),end.getMonth(),end.getDate(),end.getHours(),end.getMinutes(), end.getSeconds());
+			        java.util.Calendar endtime = java.util.Calendar.getInstance();
+			        startdate.setTime(start);
+			        endtime.setTime(end);
 			        String title;
 			        if(component.getProperty("NAME") != null){
 			        	title = component.getProperty("NAME").getValue();
 			        } 
 			        else 
 			        	title = null;
-			        String summary = component.getProperty("SUMMARY").getValue();
-				    Date time = SDF.parse(component.getProperty("DTSTAMP").getValue());
+			        
+			        String summary = "";
+			        if(component.getProperty("SUMMARY") != null){
+			        	summary = component.getProperty("SUMMARY").getValue();
+			        }
+				    //Date time = SDF.parse(component.getProperty("DTSTAMP").getValue());
 				   
-				    if(component.getProperty("LOCATION") != null){
+				    /*
+			        if(component.getProperty("LOCATION") != null){
 				    	String location = component.getProperty("LOCATION").getValue();
 				    }
+				    */
 				    
-				    int duration;
-				    if(component.getProperty("DURATION") != null){
-				    	duration = Integer.parseInt(component.getProperty("DURATION").getValue());
-				    }
-				    else 
-				    	duration = (int) Math.round((end.getTime() - start.getTime())/3600);
+				    int duration = (int) Math.round((end.getTime() - start.getTime())/60000);  	
 				    	
 				    String recurrence;
-				    if(component.getProperty("FREQ") != null){
-				    	recurrence = component.getProperty("FREQ").getValue();
-				    	
+				    if(component.getProperty("RRULE") != null){
+				    	recurrence = component.getProperty("RRULE").getValue().split("=")[1].split(";")[0];	
 				    } 
 				    else
 				    	recurrence = "Once";
+				    int testhere = 1;
+				    if(testhere > 0){}
+				    
+				    java.util.Calendar lastdate = null;
+				    if(component.getProperty("RRULE") != null && component.getProperty("RRULE").getValue().contains("UNTIL")){
+				    	 Date last = SDF.parse(component.getProperty("RRULE").getValue().split("=")[2]);
+					         lastdate = java.util.Calendar.getInstance();
+					         lastdate.setTime(last); //this hasn't been tested yet!
+				    }
 				    
 				    String description;
 				    if(component.getProperty("DESCRIPTION") != null){
@@ -107,10 +129,11 @@ public class File_Reader {
 			        
 				    //setting up the appointment object with the given date.... 
 				    Appointment appointment = new Appointment(title,description,startdate,duration,recurrence);
-				    appointment.setEnd_date(enddate);
+				    appointment.setEnd_date(lastdate);
 				    appointment.setDescription(description);
+				    appointment.setSummary(summary);
 				    list_of_appointments.add(appointment);
-				   // System.out.println(appointment);
+				    System.out.println(appointment);
 			    }
 			    
 			}  // end of for loop iterator over the file ... 
@@ -212,13 +235,17 @@ public class File_Reader {
 		for(Appointment a : Schedule.appointments){
 			
 			java.util.GregorianCalendar startDate = (GregorianCalendar) a.getStart_date();
-			java.util.GregorianCalendar endDate = null;
+			java.util.GregorianCalendar endDate = (GregorianCalendar)java.util.Calendar.getInstance();
+			endDate.setTime(startDate.getTime());
+			endDate.add(java.util.Calendar.MINUTE, a.r.duration);
 			
+			/*
 			if(a.getEnd_date() != null){
 				endDate = (GregorianCalendar) a.getEnd_date();
 			}
+			*/
 			String eventname = a.getTitle();
-			String summary = a.getTitle();
+			String summary = a.getSummary();
 			String frequency = a.r.Get_eventfreq();
 			String description = a.getDescription();
 			
@@ -233,20 +260,33 @@ public class File_Reader {
 			String rrule ="";
 			VEvent event;
 			
-			
-			if(end_date != null){
-				event = new VEvent(start_date,end_date,eventname);
-			}
-			else {
-				 event = new VEvent(start_date,eventname);
-			}
-			
+			//if(end_date != null){
+			event = new VEvent(start_date,end_date,summary);
+			//}
+			//else {
+			//	 event = new VEvent(start_date,eventname);
+			//}
 			
 			event.getProperties().add(u_id);
+			//event.getProperties().add(new Summary(summary));
+			event.getProperties().add(new Name(eventname));
 			event.getProperties().add(new Description(description));
 			
 			if(!frequency.equalsIgnoreCase("")){
 				rrule = "FREQ="+frequency;
+				if(a.r.lastAppointment != null){
+					java.util.Calendar la = a.r.lastAppointment;
+					String addThisUntil = ";UNTIL=" +
+										  la.get(java.util.Calendar.YEAR) +
+										  "" + String.format("%02d", la.get(java.util.Calendar.MONTH) + 1) +
+										  "" + String.format("%02d", la.get(java.util.Calendar.DATE)) +
+										  "T" + String.format("%02d", la.get(java.util.Calendar.HOUR)) +
+										  "" + String.format("%02d", la.get(java.util.Calendar.MINUTE)) +
+										  "" + String.format("%02d", la.get(java.util.Calendar.SECOND)) +
+										  "Z";
+					rrule += addThisUntil;
+				}
+				
 				event.getProperties().add(new RRule(rrule));
 				System.out.println(rrule);
 			}

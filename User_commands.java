@@ -45,7 +45,7 @@ public class User_commands {
 		String Recurrence 	  = scan.nextLine();
 		
 		System.out.print("Duration in hours");
-		int Duration		  = scan.nextInt();
+		int Duration		  = scan.nextInt(); 
 		
 		System.out.println("  ");
 		System.out.println("Adding the appointment to the list_of_appointments...");
@@ -202,15 +202,66 @@ public class User_commands {
 		
 	}
 	
-	public static void Sort_Appointments(){
-		
+	public static ArrayList<Appointment> GetDatesAppointments(Calendar date){
+		return Schedule.getDatesAppointments(date);
 	}
 	
-	public static  ArrayList<Appointment> Import_Appointment() throws IOException, ParserException{
+	public static ArrayList<Appointment> GetWeeksAppointments(Calendar date){
+		return Schedule.getWeeksAppointments(date);	
+	}
+	
+	public static ArrayList<Appointment> GetMonthsAppointments(Calendar date){
+		return Schedule.getMonthsAppointments(date);
+	}
+	
+	public static ArrayList<Appointment> GetYearsAppointments(Calendar date){
+		return Schedule.getYearsAppointments(date);
+	}
+	
+	public static void PrintDatesAppointments(Calendar date){
+		printArrayListOfAppointments(
+				//print appointments from this date
+				User_commands.GetDatesAppointments(date)
+				);
+	}
+	
+	public static void PrintWeeksAppointments(Calendar date){
+		printArrayListOfAppointments(
+				//print appointments from this week
+				User_commands.GetWeeksAppointments(date)
+				);
+	}
+	
+	public static void PrintMonthsAppointments(Calendar date){
+		printArrayListOfAppointments(
+				//print appointments from this month
+				GetMonthsAppointments(date)
+				);
+	}
+	
+	public static void PrintYearsAppointments(Calendar date){
+		printArrayListOfAppointments(
+				//print appointments from this week
+				GetYearsAppointments(date)
+				);
+	}
+	
+	public static ArrayList<Appointment> Import_Appointment() throws IOException, ParserException{
 		System.out.print("Enter the name of the file:");
 		String filename = scan.nextLine();
 		return File_Reader.Read_File(filename);
-		
+	}
+	
+	public static void printArrayListOfAppointments(ArrayList<Appointment> appointments){
+		for(Appointment ap : appointments){
+			if(ap instanceof header_date_occur){
+				System.out.println((header_date_occur)ap);
+			}
+			else{
+				System.out.println(ap);
+			}
+			
+		}
 	}
 	
 	public static void print_appointments_from_file() throws IOException, ParserException{

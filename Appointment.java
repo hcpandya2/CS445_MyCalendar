@@ -5,6 +5,7 @@ public class Appointment implements Comparable<Appointment> {
 
 	String title;               // appointment name
 	String description;
+	String summary;
 	ReoccuranceRule r;
 	
 	public Appointment(String title, String description, Calendar startdate, int duration, String reoccuranceType){
@@ -26,10 +27,18 @@ public class Appointment implements Comparable<Appointment> {
 		
 		r.setFirstAppointment(startdate);
 		r.setDuration(duration);
-	}
+	} 
 
 	public String getTitle() {
 		return title;
+	}
+	
+	public void setSummary(String summary){
+		this.summary = summary;
+	}
+	
+	public String getSummary(){
+		return summary;
 	}
 
 	public void setTitle(String title) {
@@ -71,7 +80,7 @@ public class Appointment implements Comparable<Appointment> {
 	}
 	
 	public boolean IsOndate(Calendar testDate){
-		return r.CheckDate(testDate.get(Calendar.MONTH), testDate.get(Calendar.DATE), testDate.get(Calendar.YEAR));
+		return r.CheckDate(testDate.get(Calendar.MONTH) + 1, testDate.get(Calendar.DATE), testDate.get(Calendar.YEAR));
 	}
 
 	public void setReoccuranceRule(ReoccuranceRule  Re){
@@ -103,18 +112,33 @@ public class Appointment implements Comparable<Appointment> {
 	
 	@Override
 	public int compareTo(Appointment ap) {
-		return getStart_date().compareTo(ap.getStart_date());
+		//we need to sort only based on time of day
+		Calendar thisTimeOfDay = Calendar.getInstance();
+		thisTimeOfDay.setTime(getStart_date().getTime());
+		thisTimeOfDay.set(Calendar.DATE, 1);
+		thisTimeOfDay.set(Calendar.MONTH, 1);
+		thisTimeOfDay.set(Calendar.YEAR, 1);
+		Calendar apTimeOfDay = Calendar.getInstance();
+		apTimeOfDay.setTime(ap.getStart_date().getTime());
+		apTimeOfDay.set(Calendar.DATE, 1);
+		apTimeOfDay.set(Calendar.MONTH, 1);
+		apTimeOfDay.set(Calendar.YEAR, 1);
+		return thisTimeOfDay.compareTo(apTimeOfDay);
 	}
 	
 	@Override
 	public String toString() {
+		//if a normal appointment, print time and duration
 		return "[ description=" + description
-				+ ", r=" + r + ", Title=" + getTitle()
+				+ ", (" + r.getName() + "), Title=" + getTitle()
 				+ ", Description=" + getDescription()
-				+ ", Start_date=" + /*getStart_date() +*/ getStart_date().get(Calendar.MONTH) +"/" +
-				getStart_date().get(Calendar.DATE) + "/"+ getStart_date().get(Calendar.YEAR)+ " " +
-				getStart_date().get(Calendar.HOUR) + ":" + getStart_date().get(Calendar.MINUTE) + ":" +
-				getStart_date().get(Calendar.SECOND) +/*getEnd_date()  + */ 
+				+ ", Start_date=" +
+				(getStart_date().get(Calendar.MONTH) + 1) +"/" +
+				getStart_date().get(Calendar.DATE) + "/"+
+				getStart_date().get(Calendar.YEAR)+ " " +
+				getStart_date().get(Calendar.HOUR) + ":" +
+				getStart_date().get(Calendar.MINUTE) + ":" +
+				getStart_date().get(Calendar.SECOND) + 
 				", Duration=" + getDuration() + "]";
 	}
 }

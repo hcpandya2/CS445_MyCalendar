@@ -1,6 +1,8 @@
 import java.io.IOException;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -33,6 +35,11 @@ public class Main {
 			System.out.println("To print all the appointments from the file -> G/g");
 			System.out.println("To print all the appointments to the file -> H/h ");
 			System.out.println("To write the list of appointments to the file -> I/i");
+			
+			System.out.println("To print the list of appointments on a given day -> J/j");
+			System.out.println("To print the list of appointments on a given week -> K/k");
+			System.out.println("To print the list of appointments on a given month -> L/l");
+			System.out.println("To print the list of appointments on a given year -> M/m");
 			System.out.print("To exit from the program -> quit \n");
 			
 			while(scan.hasNext()){
@@ -84,6 +91,8 @@ public class Main {
 					System.out.println(" ");
 					System.out.println("printing appointments from list_of_appointments");
 					System.out.println(Schedule.appointments);
+					
+				
 					break;
 				}
 				else if (input.equalsIgnoreCase("g")){
@@ -96,6 +105,69 @@ public class Main {
 					User_commands.Print_Appointments_to_file();
 					System.out.println("ENd of writing to file......");
 					System.out.println(" ");
+					break;
+				}
+				
+				else if (input.equalsIgnoreCase("i")){
+					User_commands.Print_Appointments_to_file();
+					System.out.println("ENd of writing to file......");
+					System.out.println("  ");
+					break;
+				}
+				
+				else if (input.equalsIgnoreCase("j")){
+					System.out.println("Enter the date(MM-dd-yyyy): ");
+					String string_date = scan.nextLine();					
+					SimpleDateFormat SDF  = new SimpleDateFormat("MM-dd-yyyy");
+					Calendar date = Calendar.getInstance();
+					date.setTime(SDF.parse(string_date));
+					
+					User_commands.PrintDatesAppointments(date);
+					
+					System.out.println("ENd of writing......");
+					System.out.println("  ");
+					break;
+				}
+				
+				else if (input.equalsIgnoreCase("k")){
+					System.out.println("Enter the date(MM-dd-yyyy): ");
+					String string_date = scan.nextLine();
+					
+					SimpleDateFormat SDF  = new SimpleDateFormat("MM-dd-yyyy");
+					Calendar date = Calendar.getInstance();
+					date.setTime(SDF.parse(string_date));
+					
+					User_commands.PrintWeeksAppointments(date);
+					System.out.println("ENd of writing.........");
+					System.out.println("  ");
+					break;
+				}
+				
+				else if (input.equalsIgnoreCase("l")){
+					System.out.println("Enter the date(MM-dd-yyyy):");
+					String string_date = scan.nextLine();
+					
+					SimpleDateFormat SDF  = new SimpleDateFormat("MM-dd-yyyy");
+					Calendar date = Calendar.getInstance();
+					date.setTime(SDF.parse(string_date));
+					
+					User_commands.PrintMonthsAppointments(date);
+					System.out.println("ENd of writing......");
+					System.out.println("  ");
+					break;
+				}
+				
+				else if (input.equalsIgnoreCase("m")){
+					System.out.println("Enter the date(MM-dd-yyyy): ");
+					String string_date = scan.nextLine();
+					
+					SimpleDateFormat SDF  = new SimpleDateFormat("MM-dd-yyyy");
+					Calendar date = Calendar.getInstance();
+					date.setTime(SDF.parse(string_date));
+					
+					User_commands.PrintYearsAppointments(date);
+					System.out.println("ENd of writing......");
+					System.out.println("  ");
 					break;
 				}
 				else if(input.equalsIgnoreCase("quit"))
