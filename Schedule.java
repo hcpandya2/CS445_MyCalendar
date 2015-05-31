@@ -8,17 +8,6 @@ public class Schedule {
 	//String name;
 	static ArrayList<Appointment> appointments;   // list of all the existing or upcoming appointments
 	
-	//initializing a calendar with a name and a list of appointment
-	
-	
-	/*
-	public Schedule(String name){
-		this.name = name;
-		appointments = new ArrayList<Appointment>();
-		//past_appointments = new ArrayList<Appointment>();
-	}
-	*/
-	
 	// this is for when the user wants to actually delete an appointment, not just stop it from reoccurring
 	public static void delete (Appointment ap){
 		appointments.remove(ap);
@@ -39,11 +28,7 @@ public class Schedule {
 			appointments = new ArrayList<Appointment>();
 		}
 		
-		if(appointments != null && !(Schedule.appointments).contains(appointment)){
-			(Schedule.appointments).add(appointment);
-		}
-		else System.out.println("This appointment already exists");
-		
+		(Schedule.appointments).add(appointment);
 	}
 	
 	public static ArrayList<Appointment> getDatesAppointments(Calendar date){
@@ -61,16 +46,11 @@ public class Schedule {
 		return datesAppointments;
 	}
 	
-	private static ArrayList<Appointment> getAppointmentsInRange(Calendar startDate, Calendar endDate){
+	public static ArrayList<Appointment> getAppointmentsInRange(Calendar startDate, Calendar endDate){
 		ArrayList<Appointment> appointmentsInRange = new ArrayList<Appointment>();
 		
 		while (startDate.compareTo(endDate) <= 0){
 			appointmentsInRange.addAll(getDatesAppointments(startDate));
-			/*
-			 * 
-			 * copy = Calendar.getInstance(original.getTimeZone());
-copy.setTime(original.getTime());
-			 */
 			startDate.add(Calendar.DATE, 1);
 		}
 		

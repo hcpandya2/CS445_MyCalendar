@@ -62,13 +62,6 @@ public class User_commands {
 		System.out.println("  ");
 		System.out.println("New list of appointments:");
 		System.out.println(Schedule.appointments);
-		
-		
-		System.out.println("Updating the file with new appointment changes.....");
-		File_Reader.Write_to_File("sample.ics");
-		System.out.println("  ");
-		System.out.println("Changes performed successfully");
-		
 	}
 	
 	public static ArrayList<Appointment> Find_Appointment(){
@@ -205,10 +198,8 @@ public class User_commands {
 				else{
 					System.out.println("Select the proper option to perform changes:");
 				}
-				
 			}
 		}
-		
 	}
 	
 	public static ArrayList<Appointment> GetDatesAppointments(Calendar date){
@@ -286,14 +277,6 @@ public class User_commands {
 		System.out.println("printing appointments");
 		System.out.println(map_of_appointments);
 	}
-	public static void Print_Appointments_to_file() throws IOException, ValidationException, ParseException{
-		System.out.println("Enter the file name: ");
-		String filename = scan.nextLine();
-		File_Reader.Write_to_File(filename);
-		System.out.println("done writing ");
-		System.out.println(" ");
-		
-	}
 	
 	public static void read_file() throws ParseException, IOException, ValidationException{
 		System.out.println("Enter the file name:");
@@ -302,7 +285,4 @@ public class User_commands {
 		System.out.println("done writing");
 		System.out.println(" ");
 	}
-	
-	
-
 }

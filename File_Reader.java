@@ -1,17 +1,7 @@
-import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
-//import java.util.Calendar;
-
-
-
-import java.io.PrintWriter;
-import java.net.SocketException;
-import java.nio.file.Files;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -28,11 +18,9 @@ import net.fortuna.ical4j.model.property.Description;
 import net.fortuna.ical4j.model.property.Name;
 import net.fortuna.ical4j.model.property.ProdId;
 import net.fortuna.ical4j.model.property.RRule;
-import net.fortuna.ical4j.model.property.Summary;
 import net.fortuna.ical4j.model.property.Uid;
 import net.fortuna.ical4j.model.property.Version;
 import net.fortuna.ical4j.util.UidGenerator;
-
 
 
 public class File_Reader {
@@ -148,79 +136,8 @@ public class File_Reader {
 		}
 		
 		return list_of_appointments;
-
-	
-	}
-	public static void Write_to_File (String filename) throws IOException, ValidationException, ParseException{
-
-		
-		FileOutputStream fout = new FileOutputStream(filename);
-		
-		GregorianCalendar start = new GregorianCalendar();
-		start.set(2013, 2,5,9, 0);
-		
-		GregorianCalendar end=new GregorianCalendar();
-		end.set(2013, 2,5,17,0);
-		
-		DateTime startTime=new DateTime(start.getTime());
-		DateTime endTime=new DateTime(end.getTime());
-		
-		//Create event
-		VEvent eightHourEvent = new VEvent(startTime,endTime,"Test Event");
-		
-		net.fortuna.ical4j.model.Calendar cal = new net.fortuna.ical4j.model.Calendar();
-		//add product Id
-		cal.getProperties().add(new ProdId("-//Mozilla.org/NONSGML Mozilla Calendar V1.1//EN"));
-		cal.getProperties().add(Version.VERSION_2_0);
-		cal.getProperties().add(CalScale.GREGORIAN);
-		
-		//generate unique identifier
-		UidGenerator ug = new UidGenerator("uidGen");
-		Uid uid = ug.generateUid();
-		
-		eightHourEvent.getProperties().add(uid);
-
-		//add event in ical4j calendar
-		cal.getComponents().add(eightHourEvent);
-		//System.out.println(cal.toString());
-		
-		
-		//save event in test.ics file
-				String eventName = "Testing appointment";
-				 java.util.GregorianCalendar startDate = new GregorianCalendar();
-				 startDate.set(2014, 2,5,9, 0);
-				 
-				 java.util.Calendar endDate = new GregorianCalendar();
-				 endDate.set(2014,2,5,12,0);
-				
-				DateTime start_date = new DateTime(startDate.getTime());
-				DateTime end_date = new DateTime(endDate.getTime());
-				
-				String rrule = "FREQ=WEEKLY;INTERVAL=1;COUNT=10";
-				
-				
-				//VEvent meeting = new VEvent(start_date, end_date, eventName);
-				// deleted end_date for purpose of checking
-				
-				VEvent meeting = new VEvent(start_date,eventName);
-				ug = new UidGenerator("uidGen");
-				Uid u_id = ug.generateUid();
-				
-				meeting.getProperties().add(u_id);
-				meeting.getProperties().add(new RRule(rrule));
-				cal.getComponents().add(meeting);
-				
-				
-				//System.out.println(cal.toString());
-				//System.out.println(meeting);
-			
-				 CalendarOutputter out=new CalendarOutputter();
-				 out.output(cal, fout);	 	
-			
-		
 	}
 	
-	@SuppressWarnings("unused")
 	public static void write_appointments(String filename) throws ParseException, IOException, ValidationException{
 		
 		FileOutputStream fout = new FileOutputStream(filename);
@@ -239,11 +156,6 @@ public class File_Reader {
 			endDate.setTime(startDate.getTime());
 			endDate.add(java.util.Calendar.MINUTE, a.r.duration);
 			
-			/*
-			if(a.getEnd_date() != null){
-				endDate = (GregorianCalendar) a.getEnd_date();
-			}
-			*/
 			String eventname = a.getTitle();
 			String summary = a.getSummary();
 			String frequency = a.r.Get_eventfreq();
@@ -259,16 +171,10 @@ public class File_Reader {
 			Uid u_id = ug.generateUid();
 			String rrule ="";
 			VEvent event;
-			
-			//if(end_date != null){
+
 			event = new VEvent(start_date,end_date,summary);
-			//}
-			//else {
-			//	 event = new VEvent(start_date,eventname);
-			//}
 			
 			event.getProperties().add(u_id);
-			//event.getProperties().add(new Summary(summary));
 			event.getProperties().add(new Name(eventname));
 			event.getProperties().add(new Description(description));
 			
@@ -296,7 +202,4 @@ public class File_Reader {
 		CalendarOutputter out=new CalendarOutputter();
 		out.output(cal, fout);
 	}
-	
-	
-	
 }
