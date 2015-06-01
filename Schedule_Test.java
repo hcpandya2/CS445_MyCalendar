@@ -6,8 +6,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-//import javafx.beans.binding.When;
-
 public class Schedule_Test {
 	
 	@Test

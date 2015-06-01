@@ -126,6 +126,10 @@ public class Appointment implements Comparable<Appointment> {
 		return thisTimeOfDay.compareTo(apTimeOfDay);
 	}
 	
+	public String toStringTestFriendly(){
+		return toString();
+	}
+	
 	@Override
 	public String toString() {
 		//if a normal appointment, print time and duration

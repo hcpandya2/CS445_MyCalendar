@@ -107,6 +107,4 @@ public class Schedule {
 		
 		return result;
 	}
-	
-		
 }

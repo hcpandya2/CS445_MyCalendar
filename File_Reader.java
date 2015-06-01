@@ -25,12 +25,11 @@ import net.fortuna.ical4j.util.UidGenerator;
 
 public class File_Reader {
 	
-	public static String reoccurance_rule ="";
+	public static String reoccurance_rule = "";
 
 	public static ArrayList<Appointment> Read_File(String filename) throws IOException, ParserException{
 		FileInputStream fin = null;
 		ArrayList<Appointment> list_of_appointments = new ArrayList<Appointment>();
-		HashMap <Component,ArrayList<Property>> list_of_property = new HashMap<Component,ArrayList<Property>>();
 		
 		try {
 			fin = new FileInputStream(filename);
@@ -45,12 +44,10 @@ public class File_Reader {
 			for (Iterator i = cal.getComponents().iterator(); i.hasNext();) {
 			    Component component = (Component) i.next();
 			    
-			    if(component.getName().equalsIgnoreCase("VEVENT")){
-				    //list_of_components.put(new Integer(list_of_components.size() + 1),component);
-				   			    
+			    if(component.getName().equalsIgnoreCase("VEVENT")){		    
 				    SimpleDateFormat SDF = new SimpleDateFormat("yyyyMMdd'T'HHmmss'Z'");
 				    SimpleDateFormat SDFalt = new SimpleDateFormat("yyyyMMdd'T'HHmmss");
-				    
+				 
 				    Date start;
 				    try{
 				    	start = SDF.parse(component.getProperty("DTSTART").getValue());
@@ -75,20 +72,14 @@ public class File_Reader {
 			        if(component.getProperty("NAME") != null){
 			        	title = component.getProperty("NAME").getValue();
 			        } 
-			        else 
+			        else {
 			        	title = null;
+			        }
 			        
 			        String summary = "";
 			        if(component.getProperty("SUMMARY") != null){
 			        	summary = component.getProperty("SUMMARY").getValue();
 			        }
-				    //Date time = SDF.parse(component.getProperty("DTSTAMP").getValue());
-				   
-				    /*
-			        if(component.getProperty("LOCATION") != null){
-				    	String location = component.getProperty("LOCATION").getValue();
-				    }
-				    */
 				    
 				    int duration = (int) Math.round((end.getTime() - start.getTime())/60000);  	
 				    	
@@ -96,10 +87,9 @@ public class File_Reader {
 				    if(component.getProperty("RRULE") != null){
 				    	recurrence = component.getProperty("RRULE").getValue().split("=")[1].split(";")[0];	
 				    } 
-				    else
+				    else{
 				    	recurrence = "Once";
-				    int testhere = 1;
-				    if(testhere > 0){}
+				    }
 				    
 				    java.util.Calendar lastdate = null;
 				    if(component.getProperty("RRULE") != null && component.getProperty("RRULE").getValue().contains("UNTIL")){
@@ -112,8 +102,9 @@ public class File_Reader {
 				    if(component.getProperty("DESCRIPTION") != null){
 				    	description = component.getProperty("DESCRIPTION").getValue();
 				    } 
-				    else 
+				    else {
 				    	description = null;
+				    }
 			        
 				    //setting up the appointment object with the given date.... 
 				    Appointment appointment = new Appointment(title,description,startdate,duration,recurrence);
@@ -128,7 +119,6 @@ public class File_Reader {
 		
 		}// end of try block
 		catch (FileNotFoundException e) {
-			e.printStackTrace();
 			System.out.println("file doesn't exist");
 		}
 		catch (Exception e) {

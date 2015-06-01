@@ -11,6 +11,10 @@ public class header_date_occur extends Appointment {
 		return dateFor;
 	}
 	
+	public String toStringTestFriendly(){
+		return toString();
+	}
+	
 	@Override
 	public String toString(){
 		return "Appointments for: " +
