@@ -1,0 +1,46 @@
+#!/bin/bash
+
+clear
+
+echo "Checking for updates..."
+echo "sudo apt-get update"
+sudo apt-get update
+
+echo "Installing Java, Mockito, and JUnit if not present..."
+echo "sudo apt-get install openjdk-7-jdk"
+sudo apt-get install openjdk-7-jdk
+
+echo "sudo apt-get install junit"
+sudo apt-get install junit  #not sure this is necessary...we're using a jar file
+
+echo "Preparing files..."
+echo "unzip -o Calendar_cs445.zip"
+unzip -o Calendar_cs445.zip
+
+echo "compiling calendar"
+cd src
+javac -cp .:junit-4.12.jar:mockito-all-1.9.5.jar *.java
+
+echo "creating jar file"
+printf "Main-Class: Main\n" > Manifest2.txt
+jar cfm ../pcalendar.jar Manifest2.txt *.class
+cd ..
+
+echo "downloading files for testing"
+wget http://search.maven.org/remotecontent?filepath=junit/junit/4.12/junit-4.12.jar -P testjars
+wget http://search.maven.org/remotecontent?filepath=org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3-sources.jar -P testjars
+wget https://mockito.googlecode.com/files/mockito-all-1.9.5.jar -P testjars
+
+echo "Compiling tests"
+cd tests
+javac -cp ../pcalendar.jar:../testjars/* *.java
+
+echo "running tests"
+java -cp .:../src:../testjars/remotecontent?filepath=org%2Fhamcrest%2Fhamcrest-core%2F1.3%2Fhamcrest-core-1.3-sources.jar:../pcalendar.jar:../testjars/remotecontent?filepath=junit%2Fjunit%2F4.12%2Fjunit-4.12.jar:../testjars/mockito-all-1.9.5.jar org.junit.runner.JUnitCore AppointmentTest Schedule_Test header_date_occurTest ReoccuranceRuleTest Daily_occuranceTest Weekly_occuranceTest Monthly_occuranceTest Once_occurance_test Yearly_occuranceTest User_commandsTest
+
+echo "starting calendar!"
+echo ""
+cd ../src
+java Main
+
+

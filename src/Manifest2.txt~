@@ -1,0 +1,3 @@
+Main-Class: Main
+Class-Path: .:src/component:src/edu:src/net:src/org:src/parameter:src/property
+
