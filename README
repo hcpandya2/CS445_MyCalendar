@@ -1,11 +1,14 @@
-Welcome to the Calendar!
+Welcome MyCalendar!
+This program lets user schedule/delete appointment/event in a calendar. 
+Appointments can reoccure, 
+The user can edit/delete the current one, all future occurrences, or all occurrence, past, present and future. 
+The user can search the calendar;  
+The user can import all the appointments/events by reading/importing .ics file
 
 To run this program, first extract all files from the Calendar_cs445 folder.
-
 Next, navigate to the folder in the terminal.
-
 Next, run the following: source script.bsh
-
 [Enter your password if prompted]
 
-Enjoy!
+OR
+In order to run this program from console, please run Main.java
